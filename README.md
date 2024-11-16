@@ -1,6 +1,6 @@
 # Samsung Remote Controller
 
-This project enables remote control of Samsung air conditioners using an ESP32 microcontroller through a web interface, utilizing the `IRremoteESP8266` library solely for signal transmission. Unlike relying entirely on the library's Ir_Samsung module for both signal generation and sending, providing greater customization and control over the signal creation process.
+This project enables remote control of Samsung air conditioners using an ESP32 microcontroller through a web interface, utilizing the `IRremoteESP8266` library solely for signal transmission. Unlike relying entirely on the library's Ir_Samsung module for both signal generation and transmission, providing greater customization and control over the signal creation process, and a room for future further support for different A.C. remotes.
 
 ## Features:
 
