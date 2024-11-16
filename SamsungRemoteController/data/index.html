@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="rgba(0, 0, 0, 0)">
+    <title>AC Control UI</title>
+    <link href="styles.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+
+</head>
+<body>
+    <div class="ac-control">
+        <div class="header">
+            <button class="back-button">&larr;</button>
+            <h2>AC 4</h2>
+            <div class="settings">&#9881;</div>
+        </div>
+
+        <div class="status">
+            <div class="temperature">
+                <span id="temp-value" class="temp-value">25</span>
+                <span class="temp-unit">°C</span>
+            </div>
+            <div id="cooling-status" class="cooling"></div>
+            <div class="wind-speed">
+                <span class="label">WIND SPEED</span>
+                <div class="bars">
+                    <div id="bar-1" class="bar"></div>
+                    <div id="bar-2" class="bar"></div>
+                    <div id="bar-3" class="bar"></div>
+                    <div id="bar-4" class="bar"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div id="power-button" class="control-button on-off">ON/OFF</div>
+            <div class="slider-container">
+                <div class="temp-label" id="sliderLabel">Temp</div>
+                <div class="slider">
+                    <div class="slider-fill" id="sliderFill"></div>
+                </div>
+            </div>
+            <div id="wind-speed-button" class="control-button wind-speed">WIND SPEED</div>
+            <div id="mode-button" class="control-button mode">MODE</div>
+            <div id="auto-swing-button" class="control-button swing">SWING</div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

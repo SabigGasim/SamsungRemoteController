@@ -1,0 +1,185 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #1a2a3a;
+    user-select: none;
+    font-family: "Inter", sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #fff;
+    overflow: hidden;
+}
+
+.ac-control {
+    aspect-ratio: 3/4;
+    scale: 1.15;
+    width: 300px;
+    background-color: #192530;
+    border-radius: 20px;
+    padding: 20px;
+    text-align: center;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.back-button {
+    background-color: transparent;
+    color: #fff;
+    font-size: 24px;
+    border: none;
+    cursor: pointer;
+}
+
+.settings {
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.status {
+    margin: 20px 0;
+}
+
+.temperature {
+    font-size: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+}
+
+.temp-value {
+    font-weight: bold;
+}
+
+.temp-unit {
+    font-size: 20px;
+    margin-left: 5px;
+}
+
+.cooling {
+    margin-top: 10px;
+    font-size: 18px;
+    color: #4ade80;
+}
+
+.wind-speed .label {
+    font-size: 14px;
+}
+
+.bars {
+    display: flex;
+    justify-content: center;
+    margin-top: 5px;
+}
+
+.bars .bar {
+    width: 8px;
+    height: 20px;
+    background-color: #4ade80;
+    margin: 0 3px;
+    opacity: 0.5;
+}
+
+.bars .bar.active {
+    opacity: 1;
+}
+
+.controls {
+    height: 220px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0,1fr));
+    grid-template-rows: 1fr 1fr 1fr;
+    gap: 10px;
+}
+
+.control-button {
+    background-color: #223646;
+    border-radius: 10px;
+    padding: 20px;
+    cursor: pointer;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.control-button:hover {
+    background-color: #1a2a3a;
+}
+
+.control-button.on-off {
+    grid-column: 1/4;
+    grid-row: 1;
+}
+
+.control-button.swing {
+    grid-column: 3;
+    grid-row: 3;
+}
+/*top, right, bottom, and left*/
+.control-button.mode {
+    grid-column: 2;
+    grid-row: 2/4;
+}
+
+.control-button.wind-speed {
+    grid-column: 3;
+    grid-row: 2;
+}
+
+.temp-label {
+    background-color: #1a2a3a;
+    color: #fff;
+    padding: 5px 15px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    margin-top: 14px;
+    font-size: 14px;
+    text-align: center;
+    scale: 0.8;
+}
+
+.slider-container {
+    height: 100%;
+    background-color: #fff;
+    grid-row: 2/4;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Slider track */
+.slider {
+    width: 50px;
+    height: 100%;
+    background-color: #192530;
+    border-radius: 15px 15px 0 0;
+    position: relative;
+    overflow: hidden;
+}
+
+/* This is the fill that will change height as the user slides */
+.slider-fill {
+    width: 100%;
+    background-color: #fff;
+    position: absolute;
+    bottom: 0;
+    border-radius: 15px 15px 0 0;
+    transition: height 0.05s ease-out;
+    overflow: hidden;
+}
