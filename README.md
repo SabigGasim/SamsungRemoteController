@@ -11,6 +11,11 @@ This project enables remote control of Samsung air conditioners using an ESP32 m
 -   Built for ESP32 using the `IRremoteESP8266` library for IR communication.
 -   Custom web interface to interact with the device over local Wi-Fi network.
 
+
+    ![20241118_000019](https://github.com/user-attachments/assets/ccf19d61-27e4-46a7-84b5-2bcb0466dfef)
+
+
+
 ## Installation:
 
 1.  **Clone the repository:**
