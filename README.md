@@ -30,7 +30,7 @@ This project enables remote control of Samsung air conditioners using an ESP32 m
     -   `ESP32 by Espressif Systems` version 2.0.4 in the board manager.
       
 3. **Install LittleFS:**
-    For more info, see: https://github.com/lorol/LITTLEFS
+    For more info, refer to: https://github.com/lorol/LITTLEFS
 
 4.  **Upload files to ESP32:**
     On Arduino IDE, press `Ctrl + Shift + P` and choose `Upload LittleFS to Pico/ESP8266/ESP32`
@@ -44,7 +44,7 @@ This project enables remote control of Samsung air conditioners using an ESP32 m
   - Voltage: 1.4v - 1.6v
   - Current: 20mA
   - Wavelength: 940nm (a must)
-- 10Ω to 50Ω resistor (If connected to a USB 2.0, modify the resistance as needed based on the power supply).
+- 10Ω to 50Ω resistor (Connected to a USB 2.0. Modify the resistance as needed based on the power supply).
 - Two jumper wires (optional: F-F with a Breadboard).
 
 **Wiring:**
