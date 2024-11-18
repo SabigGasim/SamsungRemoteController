@@ -157,16 +157,6 @@ function onSliderMouseUp(){
 
 }
 
-function modeString(modeNum){
-    switch(modeNum){
-        case 0: return Modes.Auto;
-        case 1: return Modes.Cooling;
-        case 2: return Modes.Dry;
-        case 3: return Modes.Fan;
-        case 4: return Modes.Heating;
-    }
-}
-
 function UpdateUI(data) {
     sliderRect ??= slider.getBoundingClientRect();
     powerOn = data.PowerOn;
@@ -225,7 +215,6 @@ window.addEventListener('touchmove', onSliderMouseMove);
 window.addEventListener('touchend', onSliderMouseUp);
 
 
-
 // Initial update
 fetchData()
     .then(data => {
@@ -235,5 +224,5 @@ fetchData()
         UpdateUI(data);
     })
     .catch(error => {
-        console.error('Error fetching data:', error);
+        console.error('Error fetching data: ', error);
     });
