@@ -16,7 +16,6 @@ const FanSpeeds = {
     VeryHigh: 4
 }
 
-// Initial settings
 let powerOn = true;
 let currentTemp = 20;
 let currentWindSpeed = FanSpeeds.VeryHigh;
@@ -26,7 +25,6 @@ let sliderRect;
 
 const esp32Url = "http://192.168.1.169";
 
-// Get elements
 const tempValueEl = document.getElementById('temp-value');
 const coolingStatusEl = document.getElementById('cooling-status');
 const powerButtonEl = document.getElementById('power-button');
@@ -36,6 +34,7 @@ const modeButtonEl = document.getElementById('mode-button');
 const slider = document.querySelector('.slider');
 const sliderFill = document.getElementById('sliderFill');
 const sliderLabel = document.getElementById('sliderLabel');
+const sliderContainer = document.getElementById('slider-container-div')
 const bars = [
     document.getElementById('bar-1'),
     document.getElementById('bar-2'),
@@ -43,12 +42,10 @@ const bars = [
     document.getElementById('bar-4')
 ];
 
-// Function to update temperature display
 function updateTemperature() {
     tempValueEl.textContent = currentTemp;
 }
 
-// Function to toggle power
 function togglePower() {
     powerOn = !powerOn;
     postUpdates("power", {"powerOn": powerOn}).then(updatePower);
@@ -64,9 +61,8 @@ function updatePower(){
     }
 }
 
-// Function to change wind speed
 function changeWindSpeed() {
-    if(currentWindSpeed == FanSpeeds.VeryHigh)
+    if(currentWindSpeed === FanSpeeds.VeryHigh)
         currentWindSpeed = FanSpeeds.Auto;
     else
         currentWindSpeed++;
@@ -78,7 +74,7 @@ function changeMode(){
     if(!powerOn)
         return
 
-    if(currentMode == Modes.length - 1)
+    if(currentMode === Modes.length - 1)
         currentMode = 0;
     else
         currentMode++;
@@ -90,7 +86,6 @@ function toggleSwing(){
     postUpdates("toggle-swing", null);
 }
 
-// Function to update wind speed display
 function updateWindSpeed() {
     bars.forEach((bar, index) => {
         if (index < currentWindSpeed) {
@@ -101,18 +96,26 @@ function updateWindSpeed() {
     });
 }
 
-// Function to update slider fill based on sliding percentage
-function updateSliderFill(clientY) {
+function updateSliderFill(clientY, vibrate = true) {
     let newY = clientY - sliderRect.top;
 
     let fillPercentage = Math.floor(((sliderRect.height - newY) / sliderRect.height * 100)/ 5.71) * 5.71;
     if (fillPercentage < 20) fillPercentage = 20;
     if (fillPercentage > 100) fillPercentage = 100;
-    currentTemp = Math.floor((fillPercentage-20)/80*14+16);
+    calculatedTemp = Math.floor((fillPercentage-20)/80*14+16);
+    
 
     sliderFill.style.height = `${fillPercentage}%`;
-    sliderLabel.textContent = `${currentTemp}°C`
-    tempValueEl.textContent = currentTemp;
+    sliderLabel.textContent = `${calculatedTemp}°C`
+    tempValueEl.textContent = calculatedTemp;
+    if(currentTemp && currentTemp != null && currentTemp === calculatedTemp){
+        return;
+    }
+    
+    currentTemp = calculatedTemp;
+    if(vibrate){
+        navigator.vibrate(10);
+    }
 }
 
 function updateSliderFillByTemp(temp) {
@@ -126,7 +129,7 @@ function updateSliderFillByTemp(temp) {
 }
 
 function updateMode(){
-    if(currentMode == ModeIndices.Heating)
+    if(currentMode === ModeIndices.Heating)
         coolingStatusEl.style.color = '#ff7700'
     else
         coolingStatusEl.style.color = '#4ade80'
@@ -139,6 +142,7 @@ function onSliderMouseDown(e){
     isDragging = true;
     updateSliderFill(y);
     updateTemperature();
+    sliderContainer.style.scale = 1.1;
 }
 
 function onSliderMouseMove(e){
@@ -153,8 +157,8 @@ function onSliderMouseUp(){
     if(isDragging){
         postUpdates("temp", {"temp": currentTemp});
         isDragging = false;
+        sliderContainer.style.scale = 1.0;
     }
-
 }
 
 function UpdateUI(data) {
@@ -202,7 +206,6 @@ async function postUpdates(endpoint, body) {
 
 
 
-// Event Listeners
 powerButtonEl.addEventListener('click', togglePower);
 windSpeedButtonEl.addEventListener('click', changeWindSpeed);
 autoSwingButtonEl.addEventListener('click', toggleSwing)
@@ -215,14 +218,25 @@ window.addEventListener('touchmove', onSliderMouseMove);
 window.addEventListener('touchend', onSliderMouseUp);
 
 
-// Initial update
 fetchData()
     .then(data => {
-        if (data == null) {
+        if (data === null) {
+            UpdateUI({
+                PowerOn: true,
+                Temp: 24,
+                Fan: FanSpeeds.High,
+                Mode: ModeIndices.Heating
+            })
             return;
         }
         UpdateUI(data);
     })
     .catch(error => {
         console.error('Error fetching data: ', error);
+        UpdateUI({
+            PowerOn: true,
+            Temp: 24,
+            Fan: FanSpeeds.High,
+            Mode: ModeIndices.Heating
+        })
     });
