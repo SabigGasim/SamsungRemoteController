@@ -14,27 +14,27 @@ This project enables remote control of Samsung air conditioners using an ESP32 m
 
     ![20241118_000019](https://github.com/user-attachments/assets/ccf19d61-27e4-46a7-84b5-2bcb0466dfef)
 
-
+## Prerequisites
+Install [PlatformIO IDE](https://platformio.org/) for your environment:
+ - **Option 1**: Install as an extension in [Visual Studio Code](https://code.visualstudio.com/).
+ - **Option 2**: Use the [PlatformIO Core CLI](https://docs.platformio.org/en/latest/core/index.html) if you prefer working from the command line.
 
 ## Installation:
 
 1.  **Clone the repository:**
     `git clone https://github.com/SabigGasim/SamsungRemoteController.git` 
     
-2.  **Install necessary libraries/packages (Same version preferred):**
-    -   `IRremoteESP8266` version 2.7.18
-    -   `ESPAsyncWebServer` version 3.1.0
+2.  **Install necessary libraries (Same version preferred):**
+    -   `IRremoteESP8266` version 2.8.6
     -   `ArduinoJson` version 7.2.0
-    -   `Little_FS_esp32` version 1.0.6
-    -   Tested to work on `Arduino IDE` version 2.3.3
-    -   `ESP32 by Espressif Systems` version 2.0.4 in the board manager.
+    -   `ESPAsyncWebServer by khoih-prog` should automatically get installed once you compile the project.
       
 3. **Install LittleFS:**
     For more info, refer to: https://github.com/lorol/LITTLEFS
 
 4.  **Upload files to ESP32:**
-    On Arduino IDE, press `Ctrl + Shift + P` and choose `Upload LittleFS to Pico/ESP8266/ESP32`
-5. **Configure WiFi:** Make a `Secrets.h` file in the same folder as the .ino file, and #define your `WIFI_SSID` and `WIFI_PASSWORD`
+    On PlatformIO terminal, run `pio run --target uploadfs`
+5. **Configure WiFi:** Make a `Secrets.h` file under SamsungRemoteController/Include/, then #define your `WIFI_SSID` and `WIFI_PASSWORD`
 
 ## Circuit:
 **Components:**

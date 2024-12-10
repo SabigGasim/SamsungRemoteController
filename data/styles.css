@@ -161,6 +161,7 @@ body {
     align-items: center;
     position: relative;
     overflow: hidden;
+    transition: scale 0.05s ease-out;
 }
 
 /* Slider track */
