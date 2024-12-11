@@ -1,8 +1,9 @@
 #include "RemoteController.h"
 
-RemoteController::RemoteController(bool powerOn, size_t temp, Modes mode, FanSpeeds fanSpeed, bool swing, uint8_t sendPin)
-  : m_Values(powerOn, temp, mode, fanSpeed, swing), 
-   m_Signal{ 0x02, 0x92, 0x0F, 0x00, 0x00, 0x00, 0xF0, 0x01, 0x00 },
+RemoteController::RemoteController(bool powerOn, uint8_t temp, Modes mode, FanSpeeds fanSpeed, bool swing, uint8_t sendPin)
+  : m_FileManager("/remote.json"),
+   m_Values(powerOn, temp, mode, fanSpeed, swing),
+   m_Signal{ 0x02, 0x92, 0x0F, 0x00, 0x00, 0x00, 0xF0, 0x01, 0x00 }, 
    irsend(sendPin)
   {
     m_Signal[10] = 0x71;
@@ -12,18 +13,33 @@ RemoteController::RemoteController(bool powerOn, size_t temp, Modes mode, FanSpe
   };
 
 RemoteController::RemoteController(const RemoteValues& values, uint8_t sendPin)
-  : m_Values(values),
+  : m_FileManager("/remote.json"),
+   m_Values(values),
    m_Signal{ 0x02, 0x92, 0x0F, 0x00, 0x00, 0x00, 0xF0, 0x01, 0x00 }, 
    irsend(sendPin)
   {
     m_Signal[10] = 0x71;
     m_Signal[13] = 0xF0;
-
-    SetSignal(values);
-    irsend.begin();
   };
 
+RemoteController::RemoteController(uint8_t sendPin)
+  : m_FileManager("/remote.json"),
+   m_Values(RemoteValues()),
+   m_Signal{ 0x02, 0x92, 0x0F, 0x00, 0x00, 0x00, 0xF0, 0x01, 0x00 },
+   irsend(sendPin)
+{
+  m_Signal[10] = 0x71;
+  m_Signal[13] = 0xF0;
+}
+
+void RemoteController::Init(){
+  m_Values = RemoteValues(m_FileManager.ReadValues());
+  SetSignal(m_Values);
+  irsend.begin();
+}
+
 void RemoteController::SendSignal(){
+  m_FileManager.WriteRemoteValues(m_Values);
   if(m_Values.PowerOn){
     irsend.sendSamsungAC(m_Signal.data());
     return;
@@ -34,8 +50,11 @@ void RemoteController::SendSignal(){
 const RemoteValues& RemoteController::GetValues() const {
   return m_Values;
 }
-
 void RemoteController::SetSignal(const RemoteValues& values){
+  if(&m_Values != &values){
+    m_Values = values;
+  }
+
   SetAutoSwing(values.AutoSwing);
   SetTemp(values.Temp);
   SetMode(values.Mode);

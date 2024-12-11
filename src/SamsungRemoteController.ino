@@ -16,9 +16,8 @@ void UpdateFanSpeed(AsyncWebServerRequest* request, uint8_t* data);
 void UpdateTemp(AsyncWebServerRequest* request, uint8_t* data);
 
 constexpr int LED_PIN = 5;
-RemoteController remoteController(false, 22, Modes::Cooling, FanSpeeds::High, false, LED_PIN);
+RemoteController remoteController(LED_PIN);
 RemoteWebHost webHost(WIFI_SSID, WIFI_PASSWORD); //#define your WIFI_SSID and WIFI_PASSWORD in Secrets.h
-
 
 void setup() {
   Serial.begin(115200);
@@ -29,6 +28,7 @@ void setup() {
 
   MapEndpoints();
   webHost.Init();
+  remoteController.Init();
 }
 
 void loop() {
@@ -70,10 +70,6 @@ void MapEndpoints(){
     });
 }
 
-
-
-
-
 void UpdateTemp(AsyncWebServerRequest* request, uint8_t* data){
   StaticJsonDocument<256> doc;
   deserializeJson(doc, data);
@@ -87,18 +83,18 @@ void UpdateTemp(AsyncWebServerRequest* request, uint8_t* data){
 }
 
 void UpdateFanSpeed(AsyncWebServerRequest* request, uint8_t* data){
-  StaticJsonDocument<256> doc;
+  JsonDocument doc;
   deserializeJson(doc, data);
-  uint8_t fanSpeed = doc["fan"].as<uint8_t>();
+  uint8_t fanSpeed = doc["fan"];
   remoteController.SetFanSpeed(GetFanSpeedByIndex(fanSpeed));
   remoteController.SendSignal();
   Serial.print("Sent fan speed: "); Serial.println(fanSpeed);
 }
 
 void UpdateMode(AsyncWebServerRequest* request, uint8_t* data){
-  StaticJsonDocument<256> doc;
+  JsonDocument doc;
   deserializeJson(doc, data);
-  uint8_t mode = doc["mode"].as<uint8_t>();
+  uint8_t mode = doc["mode"];
   remoteController.SetMode(GetModeByIndex(mode));
   remoteController.SendSignal();
   Serial.print("Sent mode: "); Serial.println(mode);
@@ -112,9 +108,9 @@ void UpdateSwing(AsyncWebServerRequest* request, uint8_t* data){
 }
 
 void UpdatePower(AsyncWebServerRequest* request, uint8_t* data){
-  StaticJsonDocument<256> doc;
+  JsonDocument doc;
   deserializeJson(doc, data);
-  bool powerOn = doc["powerOn"].as<bool>();
+  bool powerOn = doc["powerOn"];
   remoteController.SetPower(powerOn);
   remoteController.SendSignal();
   Serial.print("Sent power: "); Serial.println(powerOn);
@@ -143,25 +139,25 @@ Modes GetModeByIndex(int mode){
 }
 
 const String SerializeRemoteValues(const RemoteValues& values) {
-  StaticJsonDocument<200> jsonDoc;
-  int mode = values.Mode == Modes::Auto ? 0
-    : values.Mode == Modes::Cooling ? 1
-    : values.Mode == Modes::Dry ? 2
-    : values.Mode == Modes::Fan ? 3
-    : 4; // heating;
-  int fanSpeed = values.FanSpeed == FanSpeeds::VeryHigh ? 4
-    : values.FanSpeed == FanSpeeds::High ? 3
-    : values.FanSpeed == FanSpeeds::Medium ? 2
-    : values.FanSpeed == FanSpeeds::Low ? 1
-    : 0; // Auto;
+    JsonDocument jsonDoc;
+    int mode = values.Mode == Modes::Auto ? 0
+      : values.Mode == Modes::Cooling ? 1
+      : values.Mode == Modes::Dry ? 2
+      : values.Mode == Modes::Fan ? 3
+      : 4; // heating;
+    int fanSpeed = values.FanSpeed == FanSpeeds::VeryHigh ? 4
+      : values.FanSpeed == FanSpeeds::High ? 3
+      : values.FanSpeed == FanSpeeds::Medium ? 2
+      : values.FanSpeed == FanSpeeds::Low ? 1
+      : 0; // Auto;
 
-  jsonDoc["PowerOn"] = values.PowerOn;
-  jsonDoc["Temp"] = values.Temp;
-  jsonDoc["Mode"] = mode;
-  jsonDoc["Fan"] = fanSpeed;
-  jsonDoc["AutoSwing"] = values.AutoSwing;
-  
-  String json;
-  serializeJson(jsonDoc, json);
-  return json;
-}
+    jsonDoc["PowerOn"] = values.PowerOn;
+    jsonDoc["Temp"] = values.Temp;
+    jsonDoc["Mode"] = mode;
+    jsonDoc["Fan"] = fanSpeed;
+    jsonDoc["AutoSwing"] = values.AutoSwing;
+    
+    String json;
+    serializeJson(jsonDoc, json);
+    return json;
+  }
