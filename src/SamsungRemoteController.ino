@@ -54,18 +54,25 @@ void MapEndpoints(){
     .MapPost("/power", UpdatePower)
     .MapPost("/mode", UpdateMode);
 
-  typedef AsyncWebServerRequest* Request;
+  typedef AsyncWebServerRequest* RequestPtr;
+  typedef AsyncWebServerResponse* ResponsePtr;
     
-  webHost.MapGet("/", [](Request request) {
-      request->send(LittleFS, "/index.html", "text/html");
+  webHost.MapGet("/", [](RequestPtr request) {
+      AsyncWebServerResponse *response = request->beginResponse(LittleFS, "/index.html", "text/html");
+      response->addHeader("Cache-Control", "max-age=31536000");
+      request->send(response);
     })
-    .MapGet("/styles.css", [](Request request) {
-      request->send(LittleFS, "/styles.css", "text/css");
+    .MapGet("/styles.css", [](RequestPtr request) {
+      ResponsePtr response = request->beginResponse(LittleFS, "/styles.css", "text/css");
+      response->addHeader("Cache-Control", "max-age=31536000");
+      request->send(response);
     })
-    .MapGet("/script.js", [](Request request) {
-      request->send(LittleFS, "/script.js", "application/javascript");
+    .MapGet("/script.js", [](RequestPtr request) {
+      ResponsePtr response = request->beginResponse(LittleFS,  "/script.js", "application/javascript");
+      response->addHeader("Cache-Control", "max-age=31536000");
+      request->send(response);
     })
-    .MapGet("/data", [](Request request) {
+    .MapGet("/data", [](RequestPtr request) {
       request->send(200, "application/json", SerializeRemoteValues(remoteController.GetValues()));
     });
 }
